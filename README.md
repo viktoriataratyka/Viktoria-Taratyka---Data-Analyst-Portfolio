@@ -1,1 +1,2 @@
-# Viktoria-Taratyka---Data-Analyst-Portfolio
+# Viktoria Taratyka - Data Analyst Portfolio
+## About
