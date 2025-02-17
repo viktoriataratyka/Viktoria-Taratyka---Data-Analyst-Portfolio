@@ -24,7 +24,7 @@ This section features data analytics projects with a brief overview of the techn
 **Results** Users were categorized into Highly Active, Moderately Active, and Not Active based on daily steps. Analysis showed a significant relationship between steps and sedentary minutes, with more activity linked to less sedentary time. No strong correlation was found between BMI and steps.
 
 ## Certificates
-- [Google Data Analytics Professional Certificate](https://coursera.org/share/8f6163bb8e960c57e1222316a095d54f)
+- [Google Data Analytics Professional Certificate](https://coursera.org/share/8f6163bb8e960c57e1222316a095d54f) (Jan 2025) (Coursera - Google) 
 ## Contact
 - LinkedIn: [@viktoriataratyka](https://linkedin.com/in/viktoria-taratyka-996807290/)
 - Email: vtaratyka@gmail.com
