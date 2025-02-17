@@ -3,8 +3,8 @@
 Hi All! My name is Viktoria. I recently completed the Google Data Analytics Certificate and am currently in my gap year before starting Business Management and Marketing at the University of Bath. This portfolio showcases my data projects, where I explore insights using Python, R, and SQL to solve real-world problems. 
 
 ## Table of Contents
-- [About] (https://github.com/viktoriataratyka/Viktoria-Taratyka---Data-Analyst-Portfolio/blob/main/README.md#about)
-- [Portfolio Projects] (https://github.com/viktoriataratyka/Viktoria-Taratyka---Data-Analyst-Portfolio/blob/main/README.md#portfolio-projects)
+- [About](https://github.com/viktoriataratyka/Viktoria-Taratyka---Data-Analyst-Portfolio/blob/main/README.md#about)
+- [Portfolio Projects](https://github.com/viktoriataratyka/Viktoria-Taratyka---Data-Analyst-Portfolio/blob/main/README.md#portfolio-projects)
 - [FitBit Fitness Tracker Analysis]
 - [Certificates]
 - [Contact]
