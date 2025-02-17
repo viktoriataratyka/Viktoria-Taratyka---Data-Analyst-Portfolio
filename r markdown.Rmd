@@ -1,0 +1,283 @@
+---
+title: "FitBit Fitness Tracker Data Analysis"
+author: "Viktoria Taratyka"
+date: "2025-01-27"
+output: html_document
+---
+
+## Introduction
+
+This analysis explores Fitbit tracker data to understand user behavior and identify patterns in how users interact with the device. By examining activity, BMI, and usage trends, the goal is to generate actionable insights for creating targeted marketing strategies. The findings aim to help the company better engage users and optimize their product offerings.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Setup
+
+To start, we'll load the necessary libraries and set up the working environment for our analysis. This includes importing essential packages for data manipulation, visualization, and statistical analysis.
+
+```{r}
+library(tidyverse) # for data wrangling and visualization
+library(lubridate) # for date-time manipulation
+library(ggplot2) # for creating plots
+```
+
+## Data Cleaning
+
+In this section, I used various cleaning packages to load, inspect, and preprocess the dataset by removing duplicates, filtering out unreasonable values (e.g., negative steps or calories), and converting date formats to ensure the data was ready for analysis.
+
+```{r}
+# Installing and loading necessary packages
+install.packages("here")
+library("here")
+install.packages("janitor")
+library("janitor")
+install.packages("skimr")
+library("skimr")
+install.packages("dplyr")
+library("dplyr")
+install.packages("lubridate")
+library("lubridate")
+
+# Loading the dataset
+library(readr)
+dailyActivity_merged <- read_csv("Fitabase Data 3.12.16-4.11.16/dailyActivity_merged.csv")
+
+# Previewing the dataset
+skim_without_charts("dailyActivity_merged.csv")
+
+# Converting the "ActivityDate" column to Date format
+daily_activity <- dailyActivity_merged %>%
+  mutate(ActivityDate = mdy(ActivityDate))
+
+# Removing duplicate rows
+daily_activity <- dailyActivity_merged %>% distinct()
+
+# Filtering out unreasonable values (negative steps or calories)
+daily_activity <- daily_activity %>%
+  filter(TotalSteps >= 0, Calories >= 0)
+
+# Saving the cleaned dataset
+write_csv(daily_activity, "cleaned_daily_activity.csv")
+```
+
+## Data Exploration
+
+Next, we explore the dataset to identify trends and relationships between different variables. This exploration will focus on activity patterns, usage behavior, and other key metrics.
+
+### *How do daily activity levels and sleep patterns relate to each other among Fitbit users, and what can we learn from these relationships to better understand user behavior?*
+
+```{r}
+# Create a dataframe named 'daily_activity'
+daily_activity <- read_csv("Fitabase Data 3.12.16-4.11.16/dailyActivity_merged.csv")
+
+# Create another dataframe for the sleep data.
+sleep_day <- read_csv("Fitabase Data 3.12.16-4.11.16/sleepDay_merged.csv")
+
+# Take a look at the daily_activity data.
+head(daily_activity)
+
+# Identify all the columns in the daily_activity data.
+colnames(daily_activity)
+
+# Take a look at the sleep_day data.
+head(sleep_day)
+
+# Identify all the columns in the sleep_day data.
+colnames(sleep_day)
+
+# How many unique participants are there in each dataframe?
+n_distinct(daily_activity$Id)
+n_distinct(sleep_day$Id)
+
+# How many observations are there in each dataframe?
+nrow(daily_activity)
+nrow(sleep_day)
+
+# Quick summary statistics for daily activity
+daily_activity %>%
+  select(TotalSteps, TotalDistance, SedentaryMinutes) %>%
+  summary()
+
+# Quick summary statistics for sleep data
+sleep_day %>%
+  select(TotalSleepRecords, TotalMinutesAsleep, TotalTimeInBed) %>%
+  
+  summary()
+```
+
+#### Data visualization
+
+We'll visualize the relationships between certain variables to better understand the data.
+
+```{r}
+# Relationship between Steps and Sedentary Minutes
+ggplot(data=daily_activity, aes(x=TotalSteps, y=SedentaryMinutes)) + 
+  geom_point(color = "blue", size = 2, alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) + 
+  labs(title = 'Relationship between Steps and Sedentary Minutes')
+
+# Relationship between Minutes Asleep and Time in Bed
+ggplot(data=sleep_day, aes(x=TotalMinutesAsleep, y=TotalTimeInBed)) + 
+  geom_point()
+```
+
+#### Merging datasets
+
+Here, we merge the two datasets (daily_activity and sleep_day) into a single dataset based on the Id column.
+
+```{r}
+# Merging datasets
+combined_data <- merge(sleep_day, daily_activity, by="Id") 
+
+# Take a look at how many participants are in this data set.
+n_distinct(combined_data$Id)
+```
+
+### *What is the relationship between Body Mass Index (BMI) and daily steps taken by Fitbit users, and can we identify any trends or correlations between these two variables?*
+
+```{r}
+# Load the datasets
+weight_info <- read_csv("Fitabase Data 3.12.16-4.11.16/weightLogInfo_merged.csv")
+daily_steps <- read_csv("Fitabase Data 3.12.16-4.11.16/dailySteps_merged.csv")
+
+# Preview the weight data
+head(weight_info)
+colnames(weight_info)
+
+# Preview the daily steps data
+head(daily_steps)
+colnames(daily_steps)
+
+# Number of unique participants in each dataset
+n_distinct(weight_info)
+n_distinct(daily_steps)
+
+# Number of rows in each dataset
+nrow(weight_info)
+nrow(daily_steps)
+```
+
+#### Data Summary
+
+In this section, we summarize key variables in the weight and daily steps datasets.
+
+```{r}
+# Summary statistics for weight data
+weight_info %>%
+  select(WeightKg, BMI, Fat) %>%
+  summary()
+
+# Summary statistics for daily steps data
+daily_steps %>%
+  select(StepTotal) %>%
+  summary()
+```
+
+#### Exploring the Relationship Between Weight and BMI
+
+```{r}
+# Scatter plot for weight vs. BMI
+ggplot(data=weight_info, aes(x=WeightKg, y=BMI)) + 
+  geom_point() +
+  labs(title="Relationship Between Weight and BMI", x="Weight (Kg)", y="BMI") +
+  theme_minimal()
+```
+
+#### Merging the Datasets
+
+Next, we'll merge the weight and daily steps datasets by the participant ID and explore the relationship between daily steps and BMI.
+
+```{r}
+# Merge weight and daily steps datasets by "Id"
+combined_data_2 <- merge(weight_info, daily_steps, by="Id")
+
+# Check number of unique participants in the merged dataset
+n_distinct(combined_data_2$Id)
+```
+
+####Visualizing the Relationship Between Daily Steps and BMI We will visualize the relationship between daily steps and BMI using a line chart, scatter plot, and a correlation line.
+
+```{r}
+# Scatter plot of daily steps vs. BMI
+ggplot(data = combined_data_2, aes(x = StepTotal, y = BMI)) +
+  geom_point(color = "blue", size = 2, alpha = 0.7) +
+  labs(title = "Scatter Plot of Daily Steps vs. BMI", x = "Step Total", y = "BMI") +
+  theme_minimal()
+
+# Line chart of daily steps vs. BMI
+ggplot(data = combined_data_2, aes(x = StepTotal, y = BMI)) +
+  geom_line(color = "blue", size = 1) +
+  labs(title = "Line Chart of StepTotal vs BMI", x = "Step Total", y = "BMI") +
+  theme_minimal()
+
+# Scatter plot with correlation line
+ggplot(data = combined_data_2, aes(x = StepTotal, y = BMI)) +
+  geom_point(color = "blue", size = 2, alpha = 0.6) +
+  geom_smooth(method = "lm", color = "red", se = TRUE) +
+  labs(title = "Scatter Plot with Trend Line", x = "Step Total", y = "BMI") +
+  theme_minimal()
+```
+
+### *How are Fitbit users categorized based on their daily step counts, and what is the proportion of users in each activity level?*
+
+```{r}
+# Load the daily activity dataset
+daily_activity <- read_csv("Fitabase Data 3.12.16-4.11.16/dailyActivity_merged.csv")
+
+# View the first few rows to understand the structure
+head(daily_activity)
+```
+
+#### Categorizing Participants Based on Activity Levels
+
+We categorize participants based on their daily step counts into three activity levels: Highly Active, Moderately Active, and Not Active.
+
+```{r}
+# Categorizing participants based on TotalSteps
+daily_activity <- daily_activity %>%
+  mutate(ActivityLevel = case_when(
+    TotalSteps >= 10000 ~ "Highly Active",
+    TotalSteps >= 5000 & TotalSteps < 10000 ~ "Moderately Active",
+    TotalSteps < 5000 ~ "Not Active"
+  ))
+
+# Create a summary table of the activity levels
+activity_summary <- daily_activity %>%
+  group_by(ActivityLevel) %>%
+  summarise(Count = n())
+```
+
+####Visualizing Activity Levels We will visualize the distribution of activity levels using both a bar chart and a pie chart.
+
+Bar Chart of Activity Levels
+
+```{r}
+# Bar chart showing activity levels of Fitbit users
+ggplot(activity_summary, aes(x = ActivityLevel, y = Count, fill = ActivityLevel)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Activity Levels of Fitbit Users",
+       x = "Activity Level", 
+       y = "Number of Participants") +
+  theme_minimal() +
+  scale_fill_manual(values = c("Not Active" = "red", "Moderately Active" = "orange", "Highly Active" = "green"))
+
+```
+
+Pie Chart of Activity Levels
+
+```{r}
+# Pie chart showing the proportion of activity levels
+ggplot(activity_summary, aes(x = "", y = Count, fill = ActivityLevel)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  labs(title = "Proportion of Activity Levels") +
+  theme_void() +
+  scale_fill_manual(values = c("Not Active" = "red", "Moderately Active" = "orange", "Highly Active" = "green"))
+
+```
+
+## Conclusion
+
+This analysis of Fitbit tracker data provides insights into user behavior by examining activity, BMI, and usage trends. The findings highlight key patterns that can help the company develop targeted marketing strategies and better engage users. Ultimately, this information can assist in optimizing Fitbit's product offerings to meet user needs more effectively.
