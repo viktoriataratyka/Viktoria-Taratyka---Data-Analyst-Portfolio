@@ -26,5 +26,5 @@ This section features data analytics projects with a brief overview of the techn
 ## Certificates
 - [Google Data Analytics Professional Certificate](https://coursera.org/share/8f6163bb8e960c57e1222316a095d54f)
 ## Contact
-- LinkedIn: [@viktoriataratyka](www.linkedin.com/in/viktoria-taratyka-996807290)
+- LinkedIn: [@viktoriataratyka](linkedin.com/in/viktoria-taratyka)
 - Email: vtaratyka@gmail.com
