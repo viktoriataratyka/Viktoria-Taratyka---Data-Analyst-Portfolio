@@ -4,7 +4,7 @@ Hi All! My name is Viktoria. I recently completed the Google Data Analytics Cert
 
 ## Table of Contents
 - [About] (https://github.com/viktoriataratyka/Viktoria-Taratyka---Data-Analyst-Portfolio/blob/main/README.md#about)
-- [Portfolio Projects] 
+- [Portfolio Projects] (https://github.com/viktoriataratyka/Viktoria-Taratyka---Data-Analyst-Portfolio/blob/main/README.md#portfolio-projects)
 - [FitBit Fitness Tracker Analysis]
 - [Certificates]
 - [Contact]
